@@ -84,10 +84,10 @@ app.get('/api/persons', (req, res) =>{
 //   res.status(204).end()
 // })
 
-const generateId = () =>{
-  const randomNumber = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-  return randomNumber
-}
+// const generateId = () =>{
+//   const randomNumber = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
+//   return randomNumber
+// }
 
 // app.post('/api/persons', (req, res) =>{
 //   const body = req.body
