@@ -28,6 +28,15 @@ app.use(morgan(function (tokens, req, res) {
 
 //       ----------------ROUTES----------------
 
+app.get('/info', (req, res) =>{
+  res.send(
+    `<div>
+      <p>Welcome to the phonebook database! these are the end points:</p>
+      <p>/api/persons</p>
+      <p>/api/persons/:id where ":id" is a the id of the person's id</p>
+    </div>`)
+})
+
 app.get('/api/persons/:id', (req, res, next) =>{
   const id = req.params.id
 
@@ -61,7 +70,7 @@ app.put('/api/persons/:id', (req, res, next) =>{
 
   PersonNumber.findByIdAndUpdate(id, personReplace, { new: true })
     .then(updatedPerson =>{
-      res.json(updatedPerson.toJSON()).end()
+      res.json(updatedPerson.toJSON).end()
     })
     .catch(error => next(error))
 })

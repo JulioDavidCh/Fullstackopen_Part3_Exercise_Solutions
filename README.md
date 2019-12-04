@@ -1,1 +1,1 @@
-Solution of the exercise 3.17 of the course
+Solution of the exercise 3.18 of the course
