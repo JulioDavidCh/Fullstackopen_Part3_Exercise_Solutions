@@ -89,32 +89,27 @@ app.get('/api/persons', (req, res) =>{
 //   return randomNumber
 // }
 
-// app.post('/api/persons', (req, res) =>{
-//   const body = req.body
+app.post('/api/persons', (req, res) =>{
+  const body = req.body
 
-//   if(!body.number){
-//     //if request was sent without a number
-//     return res.status(400).json({error: "phone number is mandatory, add one to your request"})
-//   }else if(persons.find(entry => entry.name === body.name)){
-//     //if name already exists in our phonebook
-//     return res.status(400).json({error: 'name must be unique'})
-//   }else if(!body.name){
-//     //if request was sent without a name
-//     return res.status(400).json({error: "name is mandatory, add one to your request"})
-//   }
+  if(!body.number){
+    //if request was sent without a number
+    return res.status(400).json({error: "phone number is mandatory, add one to your request"})
+  }else if(!body.name){
+    //if request was sent without a name
+    return res.status(400).json({error: "name is mandatory, add one to your request"})
+  }
 
-//   const id = generateId()
+  const newNumber = new PersonNumber({
+    name: body.name,
+    number: body.number
+  })
 
-//   const newNumber = {
-//     name: body.name,
-//     number: body.number,
-//     id: id
-//   }
-
-//   persons = [...persons, newNumber]
-
-//   res.json(newNumber)
-// })
+  newNumber.save()
+    .then(savedNumber =>{
+      res.json(savedNumber.toJSON())
+    })
+})
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
