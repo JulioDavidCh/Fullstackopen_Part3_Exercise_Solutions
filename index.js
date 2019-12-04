@@ -28,35 +28,38 @@ app.use(morgan(function (tokens, req, res) {
 
 //       ----------------ROUTES----------------
 
-// app.get('/api/persons/:id', (req, res) =>{
-//   const id = Number(req.params.id)
-//   const phoneNumber = persons.find(personData => personData.id === id)
+app.get('/api/persons/:id', (req, res, next) =>{
+  const id = req.params.id
 
-//   if(phoneNumber){
-//     return res.json(phoneNumber)
-//   }
-//   res.status(404).end()
-// })
+  PersonNumber.findById(id)
+  .then(phoneNumber =>{
+    if(phoneNumber){
+      return res.json(phoneNumber)
+    }else{
+      return res.status(404).end()
+    }
+  })
+  .catch(error => next(error))
+})
 
-app.get('/api/persons', (req, res) =>{
+app.get('/api/persons', (req, res, next) =>{
   PersonNumber.find({})
     .then(phoneBook =>{
       res.json(phoneBook.map(phoneNumber => phoneNumber.toJSON()))
     })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) =>{
+app.delete('/api/persons/:id', (req, res, next) =>{
   const id = req.params.id
   PersonNumber.findByIdAndDelete(id)
   .then(response =>{
     res.status(204).end()
   })
-  .catch(error=>{
-    res.json({error: error})
-  })
+  .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) =>{
+app.post('/api/persons', (req, res, next) =>{
   const body = req.body
 
   if(!body.number){
@@ -76,6 +79,7 @@ app.post('/api/persons', (req, res) =>{
     .then(savedNumber =>{
       res.json(savedNumber.toJSON())
     })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -84,6 +88,17 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
+const errorHandler = (error, req, res, next) =>{
+  console.log(error.message)
+
+  if(error.name === 'CastError' && error.kind === 'ObjectId'){
+    return res.status(400).send({error: 'malformatted id'})
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
   
 const PORT = process.env.PORT
 
