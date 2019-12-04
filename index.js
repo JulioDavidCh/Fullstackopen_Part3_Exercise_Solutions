@@ -25,28 +25,6 @@ app.use(morgan(function (tokens, req, res) {
   ].join(' ')
 }))
 
-// let persons =   [
-//   {
-//     name: "Arto Hellas",
-//     number: "040-123456",
-//     id: 1
-//   },
-//   {
-//     name: "Ada Lovelace",
-//     number: "39-44-5323523",
-//     id: 2
-//   },
-//   {
-//     name: "Dan Abramov",
-//     number: "12-43-234345",
-//     id: 3
-//   },
-//   {
-//     name: "Mary Poppendieck",
-//     number: "39-23-6423122",
-//     id: 4
-//   }
-// ]
 
 //       ----------------ROUTES----------------
 
@@ -67,27 +45,16 @@ app.get('/api/persons', (req, res) =>{
     })
 })
 
-// app.get('/info', (req, res) =>{
-//   res.send(`
-//   <div>
-//     <p>Phonebook has info for ${persons.length} people</p>
-//     <p>${(new Date()).toString()}</p>
-//   </div>
-//   `)
-// })
-
-// app.delete('/api/persons/:id', (req, res) =>{
-//   const id = Number(req.params.id)
-
-//   persons = persons.filter(entry => entry.id !== id)
-  
-//   res.status(204).end()
-// })
-
-// const generateId = () =>{
-//   const randomNumber = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-//   return randomNumber
-// }
+app.delete('/api/persons/:id', (req, res) =>{
+  const id = req.params.id
+  PersonNumber.findByIdAndDelete(id)
+  .then(response =>{
+    res.status(204).end()
+  })
+  .catch(error=>{
+    res.json({error: error})
+  })
+})
 
 app.post('/api/persons', (req, res) =>{
   const body = req.body
