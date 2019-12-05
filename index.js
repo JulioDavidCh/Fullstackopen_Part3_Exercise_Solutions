@@ -114,13 +114,15 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) =>{
-  console.error(error.message)
+  console.error(Object.keys(error))
+  console.log(error.kind)
 
   if(error.name === 'CastError' && error.kind === 'ObjectId'){
     return res.status(400).send({error: 'malformatted id'})
-  }else if(error.name === 'ValidationError' && error.errors.name.kind === 'unique'){
-    return res.status(400).send({error: `this user's name is already in the database, use a different name`})
+  }else if(error.name === 'ValidationError'){
+    return res.status(400).send({error: error.message})
   }
+
   next(error)
 }
 
