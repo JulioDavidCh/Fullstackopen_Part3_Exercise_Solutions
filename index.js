@@ -28,7 +28,7 @@ app.use(morgan(function (tokens, req, res) {
 
 //       ----------------ROUTES----------------
 
-app.get('/info', (req, res) =>{
+app.get('/info', (req, res) => {
   res.send(
     `<div>
       <p>Welcome to the phonebook database! these are the end points:</p>
@@ -37,29 +37,29 @@ app.get('/info', (req, res) =>{
     </div>`)
 })
 
-app.get('/api/persons/:id', (req, res, next) =>{
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
 
   PersonNumber.findById(id)
-  .then(phoneNumber =>{
-    if(phoneNumber){
-      return res.json(phoneNumber)
-    }else{
-      return res.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+    .then(phoneNumber => {
+      if(phoneNumber){
+        return res.json(phoneNumber)
+      }else{
+        return res.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
-app.get('/api/persons', (req, res, next) =>{
+app.get('/api/persons', (req, res, next) => {
   PersonNumber.find({})
-    .then(phoneBook =>{
+    .then(phoneBook => {
       res.json(phoneBook.map(phoneNumber => phoneNumber.toJSON()))
     })
     .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (req, res, next) =>{
+app.put('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
   const body = req.body
 
@@ -69,30 +69,30 @@ app.put('/api/persons/:id', (req, res, next) =>{
   }
 
   PersonNumber.findByIdAndUpdate(id, personReplace, { new: true })
-    .then(updatedPerson =>{
+    .then(updatedPerson => {
       res.json(updatedPerson.toJSON).end()
     })
     .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res, next) =>{
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
   PersonNumber.findByIdAndDelete(id)
-  .then(response =>{
-    res.status(204).end()
-  })
-  .catch(error => next(error))
+    .then(response => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res, next) =>{
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if(!body.number){
     //if request was sent without a number
-    return res.status(400).json({error: "phone number is mandatory, add one to your request"})
+    return res.status(400).json({ error: 'phone number is mandatory, add one to your request' })
   }else if(!body.name){
     //if request was sent without a name
-    return res.status(400).json({error: "name is mandatory, add one to your request"})
+    return res.status(400).json({ error: 'name is mandatory, add one to your request' })
   }
 
   const newNumber = new PersonNumber({
@@ -101,7 +101,7 @@ app.post('/api/persons', (req, res, next) =>{
   })
 
   newNumber.save()
-    .then(savedNumber =>{
+    .then(savedNumber => {
       res.json(savedNumber.toJSON())
     })
     .catch(error => next(error))
@@ -113,21 +113,21 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-const errorHandler = (error, req, res, next) =>{
+const errorHandler = (error, req, res, next) => {
   console.error(Object.keys(error))
   console.log(error.kind)
 
   if(error.name === 'CastError' && error.kind === 'ObjectId'){
-    return res.status(400).send({error: 'malformatted id'})
+    return res.status(400).send({ error: 'malformatted id' })
   }else if(error.name === 'ValidationError'){
-    return res.status(400).send({error: error.message})
+    return res.status(400).send({ error: error.message })
   }
 
   next(error)
 }
 
 app.use(errorHandler)
-  
+
 const PORT = process.env.PORT
 
 app.listen(PORT, () => {
