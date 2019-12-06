@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
+
+app.use(cors())
 
 app.use(bodyParser.json())
 
@@ -40,6 +43,8 @@ let persons =   [
     id: 4
   }
 ]
+
+//       ----------------ROUTES----------------
 
 app.get('/api/persons/:id', (req, res) =>{
   const id = Number(req.params.id)
