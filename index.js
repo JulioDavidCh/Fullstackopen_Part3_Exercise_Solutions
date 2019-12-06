@@ -64,8 +64,20 @@ const generateId = () =>{
 }
 
 app.post('/api/persons', (req, res) =>{
-  const id = generateId()
   const body = req.body
+
+  if(!body.number){
+    //if request was sent without a number
+    return res.status(400).json({error: "phone number is mandatory, add one to your request"})
+  }else if(persons.find(entry => entry.name === body.name)){
+    //if name already exists in our phonebook
+    return res.status(400).json({error: 'name must be unique'})
+  }else if(!body.name){
+    //if request was sent without a name
+    return res.status(400).json({error: "name is mandatory, add one to your request"})
+  }
+
+  const id = generateId()
 
   const newNumber = {
     name: body.name,
@@ -73,11 +85,7 @@ app.post('/api/persons', (req, res) =>{
     id: id
   }
 
-  console.log(persons)
-
-  persons = persons.concat(newNumber)
-
-  console.log(persons)
+  persons = [...persons, newNumber]
 
   res.json(newNumber)
 })
