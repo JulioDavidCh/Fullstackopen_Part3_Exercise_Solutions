@@ -1,8 +1,11 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 app.use(bodyParser.json())
+
+app.use(morgan('tiny'))
 
 let persons =   [
   {
@@ -26,6 +29,16 @@ let persons =   [
     id: 4
   }
 ]
+
+// const requestLogger = (request, response, next) => {
+//   console.log('Method:', request.method)
+//   console.log('Path:  ', request.path)
+//   console.log('Body:  ', request.body)
+//   console.log('---')
+//   next()
+// }
+
+// app.use(requestLogger)
 
 app.get('/api/persons/:id', (req, res) =>{
   const id = Number(req.params.id)
@@ -89,6 +102,12 @@ app.post('/api/persons', (req, res) =>{
 
   res.json(newNumber)
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
   
   const PORT = 3001
   app.listen(PORT, () => {
