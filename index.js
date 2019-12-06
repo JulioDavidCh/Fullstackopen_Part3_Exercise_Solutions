@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let persons =   [
   {
@@ -55,59 +58,29 @@ app.delete('/api/persons/:id', (req, res) =>{
   res.status(204).end()
 })
 
-//   app.get('/', (req, res) => {
-//     res.send('<h1>Hello World!</h1>')
-//   })
-  
-//   app.get('/notes', (req, res) => {
-//     res.json(notes)
-//   })
+const generateId = () =>{
+  const randomNumber = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
+  return randomNumber
+}
 
-//   app.get('/notes/:id', (request, response) => {
-//     const id = Number(request.params.id)
-//     const note = notes.find(note => note.id === id)
+app.post('/api/persons', (req, res) =>{
+  const id = generateId()
+  const body = req.body
 
-//     if (note) {
-//       response.json(note)
-//     } else {
-//       response.status(404).end()
-//     }
-//   })
+  const newNumber = {
+    name: body.name,
+    number: body.number,
+    id: id
+  }
 
-//   app.delete('/notes/:id', (request, response) => {
-//     const id = Number(request.params.id)
-//     notes = notes.filter(note => note.id !== id)
-  
-//     response.status(204).end()
-//   })
+  console.log(persons)
 
-// const generateId = () => {
-//   const maxId = notes.length > 0
-//     ? Math.max(...notes.map(n => n.id))
-//     : 0
-//   return maxId + 1
-// }
+  persons = persons.concat(newNumber)
 
-// app.post('/notes', (request, response) => {
-//   const body = request.body
+  console.log(persons)
 
-//   if (!body.content) {
-//     return response.status(400).json({ 
-//       error: 'content missing' 
-//     })
-//   }
-
-//   const note = {
-//     content: body.content,
-//     important: body.important || false,
-//     date: new Date(),
-//     id: generateId(),
-//   }
-
-//   notes = notes.concat(note)
-
-//   response.json(note)
-// })
+  res.json(newNumber)
+})
   
   const PORT = 3001
   app.listen(PORT, () => {
