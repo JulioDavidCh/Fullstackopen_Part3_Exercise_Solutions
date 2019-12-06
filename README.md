@@ -1,1 +1,1 @@
-Solution for the exercise 3.2 of the course
+Solution for the exercise 3.3 of the course

@@ -25,6 +25,16 @@ let persons =   [
   }
 ]
 
+app.get('/api/persons/:id', (req, res) =>{
+  const id = Number(req.params.id)
+  const phoneNumber = persons.find(personData => personData.id === id)
+
+  if(phoneNumber){
+    return res.json(phoneNumber)
+  }
+  res.status(404).end()
+})
+
 app.get('/api/persons', (req, res) =>{
   res.json(persons) 
 })
