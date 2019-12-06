@@ -1,4 +1,1 @@
-Solution of the exercise 3.21 of the course
-
-here's the heroku app: 
-https://young-lake-85511.herokuapp.com/
+Solution of the exercise 3.22 of the course
