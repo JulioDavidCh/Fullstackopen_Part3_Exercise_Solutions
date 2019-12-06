@@ -1,28 +1,11 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+const morgan = require('morgan')
+const cors = require('cors')
+const PersonNumber = require('./models/PersonNumber')
 
-<<<<<<< HEAD
-let persons =   [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 2
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4
-=======
 app.use(cors())
 
 app.use(express.static('build'))
@@ -110,20 +93,12 @@ app.post('/api/persons', (req, res, next) => {
   }else if(!body.name){
     //if request was sent without a name
     return res.status(400).json({ error: 'name is mandatory, add one to your request' })
->>>>>>> solution-3.22
   }
-]
 
-  app.get('/api/persons', (req, res) =>{
-    res.json(persons) 
+  const newNumber = new PersonNumber({
+    name: body.name,
+    number: body.number
   })
-<<<<<<< HEAD
-  
-  const PORT = 3001
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-  })
-=======
 
   newNumber.save()
     .then(savedNumber => {
@@ -158,4 +133,3 @@ const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
->>>>>>> solution-3.22
