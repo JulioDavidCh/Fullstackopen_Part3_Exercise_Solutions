@@ -5,7 +5,18 @@ const morgan = require('morgan')
 
 app.use(bodyParser.json())
 
-app.use(morgan('tiny'))
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+
+app.use(morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    tokens.body(req,res)
+  ].join(' ')
+}))
 
 let persons =   [
   {
@@ -29,16 +40,6 @@ let persons =   [
     id: 4
   }
 ]
-
-// const requestLogger = (request, response, next) => {
-//   console.log('Method:', request.method)
-//   console.log('Path:  ', request.path)
-//   console.log('Body:  ', request.body)
-//   console.log('---')
-//   next()
-// }
-
-// app.use(requestLogger)
 
 app.get('/api/persons/:id', (req, res) =>{
   const id = Number(req.params.id)
@@ -108,6 +109,7 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
   
   const PORT = 3001
   app.listen(PORT, () => {
